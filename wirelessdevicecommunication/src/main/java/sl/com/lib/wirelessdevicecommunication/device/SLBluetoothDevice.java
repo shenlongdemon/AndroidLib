@@ -26,7 +26,6 @@ public class SLBluetoothDevice implements ISLDevice {
 		int signature = _bluetoothDevice.hashCode();
 		setSignature(signature);
 	}
-	
 	@Override
 	public int connect() throws Exception{
 		// TODO Auto-generated method stub
@@ -35,7 +34,7 @@ public class SLBluetoothDevice implements ISLDevice {
 		{
 			try
 			{
-				Log.i("shenlong", "SLBluetoothDevice - Begin create bluetooth socket");
+				Log.i("shenlong", "SLBluetoothDevice - Begin create bluetooth socket " + this.getSignature());
 				if(_bluetoothSocket == null) {
 					_bluetoothSocket = _bluetoothDevice.createRfcommSocketToServiceRecord(BTMODULEUUID);
 				}
@@ -43,7 +42,6 @@ public class SLBluetoothDevice implements ISLDevice {
 				{
 					_bluetoothSocket.connect();
 				}
-
 				_inputStream = _bluetoothSocket.getInputStream();
 				_outputStream = _bluetoothSocket.getOutputStream();
 				res = 1;
@@ -118,21 +116,31 @@ public class SLBluetoothDevice implements ISLDevice {
 	public int close() throws Exception {
 		// TODO Auto-generated method stub
 		int res = 1;
-		if(_bluetoothSocket != null)
+
+		try
 		{
-			try
-			{
-				_bluetoothSocket.close();
-				_bluetoothSocket = null;
+			if (_inputStream != null) {
+				try {_inputStream.close();} catch (Exception e) {}
 				_inputStream = null;
+			}
+
+			if (_outputStream != null) {
+				try {_outputStream.close();} catch (Exception e) {}
 				_outputStream = null;
 			}
-			catch(Exception ex)
-			{
-				throw new Exception("\nSLBluetoothDevice -> disconnect() -> " + ex.getMessage() + "\n-> Cannot disconnect " + this.getName()  , ex);
 
+			if (_bluetoothSocket != null) {
+				try {_bluetoothSocket.close();} catch (Exception e) {}
+				_bluetoothSocket = null;
 			}
+			Log.i("shenlong", "Device " + this.getName() + " is closed !!!");
 		}
+		catch(Exception ex)
+		{
+			throw new Exception("\nSLBluetoothDevice -> disconnect() -> " + ex.getMessage() + "\n-> Cannot disconnect " + this.getName()  , ex);
+
+		}
+
 		return res;
 	}
 	public int disconnect() throws Exception {
@@ -153,7 +161,7 @@ public class SLBluetoothDevice implements ISLDevice {
 		}
 		return name;
 	}
-	public void setSignature(int signature)
+	private void setSignature(int signature)
 	{
 		_signature = signature;
 	}

@@ -20,6 +20,7 @@ public class SLDeviceChannel extends Thread {
 		}
 	}
 	public ISLDevice getDevice(){return _device;}
+	public Handler getHandler(){return _handler;}
 	public String getDeviceName()
 	{
 		if(_device != null)
