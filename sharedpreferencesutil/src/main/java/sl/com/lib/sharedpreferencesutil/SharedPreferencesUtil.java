@@ -34,6 +34,21 @@ public class SharedPreferencesUtil {
         String jsonString = gson.toJson(jsonObj);
         SetJSONObject(activity, key,jsonObj.toString() );
     }
+    public static void SetString (Activity activity, String key, String str)
+    {
+
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, str);
+        editor.commit();
+    }
+    public static String GetString (Activity activity, String key)
+    {
+
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        String str = sharedPref.getString(key, "");
+        return str;
+    }
     private static void SetJSONObject (Activity activity, String key, String jsonString)
     {
 
